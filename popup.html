@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>标签定名</title>
+  <link rel="stylesheet" href="popup.css">
+  <script src="popup.js" type="module"></script>
+</head>
+<body>
+  <main>
+    <header><img src="icons/32.png" width="24" height="24" alt=""><h1>标签定名</h1></header>
+    <form id="form">
+      <label for="name">标签名称</label>
+      <div class="name-input">
+        <button id="emojiToggle" class="emoji-toggle" type="button" aria-label="选择名称前的表情" aria-expanded="false" aria-controls="emojiPicker" title="选择名称前的表情" disabled>表情</button>
+        <input id="name" name="name" type="text" maxlength="120" placeholder="输入名称" autocomplete="off" spellcheck="false" disabled aria-describedby="hint status">
+      </div>
+      <section id="emojiPicker" class="emoji-picker" aria-label="表情选择器" hidden>
+        <div class="picker-heading"><strong>表情 · 向下滚动查看更多</strong><button id="emojiClear" class="emoji-clear" type="button">不加表情</button></div>
+        <div id="emojiGrid" class="emoji-grid" role="group" aria-label="表情列表，可滚动查看更多" tabindex="0"></div>
+        <div class="emoji-custom">
+          <input id="emojiCustom" type="text" maxlength="32" placeholder="粘贴其他表情" aria-label="自定义表情" autocomplete="off" spellcheck="false">
+          <button id="emojiApply" class="emoji-apply" type="button">使用</button>
+        </div>
+      </section>
+      <p id="hint">刷新、换网址都保留，关闭标签页后清除。</p>
+      <div class="actions">
+        <button id="reset" class="secondary" type="button" disabled>恢复原标题</button><button id="save" type="submit" disabled>保存名称</button>
+      </div>
+    </form>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+  </main>
+</body>
+</html>

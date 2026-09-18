@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="380" viewBox="0 0 1200 380" role="img" aria-labelledby="title desc">
+  <title id="title">标签定名</title>
+  <desc id="desc">Chrome 标签页命名扩展：名称绑定单个标签页，刷新和跳转保留，关闭即清除。</desc>
+  <defs>
+    <linearGradient id="surface" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#211A2C"/>
+      <stop offset="1" stop-color="#312143"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="380" rx="32" fill="url(#surface)"/>
+
+  <g id="title-block" transform="translate(62 58)">
+    <text x="0" y="0" fill="#C5A5F0" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="600" letter-spacing="2">CHROME EXTENSION · MANIFEST V3</text>
+    <text x="0" y="94" fill="#FFFFFF" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, sans-serif" font-size="76" font-weight="700">标签定名</text>
+    <text x="0" y="143" fill="#DED2EA" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, sans-serif" font-size="28">给当前标签页一个不会被网页改掉的名字</text>
+    <g transform="translate(0 198)" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, sans-serif" font-size="20">
+      <rect width="150" height="46" rx="12" fill="#7053A4"/>
+      <text x="75" y="30" fill="#FFFFFF" text-anchor="middle" font-weight="600">绑定 tab.id</text>
+      <path d="M166 23h30" stroke="#8E7AA5" stroke-width="2" stroke-linecap="round"/>
+      <path d="m190 17 7 6-7 6" fill="none" stroke="#8E7AA5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="212" width="174" height="46" rx="12" fill="#392D4D" stroke="#705A8A"/>
+      <text x="299" y="30" fill="#F2EDF8" text-anchor="middle">刷新 / 跳转保留</text>
+      <path d="M402 23h30" stroke="#8E7AA5" stroke-width="2" stroke-linecap="round"/>
+      <path d="m426 17 7 6-7 6" fill="none" stroke="#8E7AA5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="448" width="150" height="46" rx="12" fill="#392D4D" stroke="#705A8A"/>
+      <text x="523" y="30" fill="#F2EDF8" text-anchor="middle">关闭即清除</text>
+    </g>
+  </g>
+
+  <g id="tab-proof" transform="translate(770 42)">
+    <rect width="362" height="296" rx="24" fill="#F7F5FA"/>
+    <rect width="82" height="296" rx="24" fill="#EAE3F2"/>
+    <rect x="14" y="18" width="54" height="54" rx="14" fill="#7053A4"/>
+    <path d="M29 31h10a4 4 0 0 1 3 1l14 14a4 4 0 0 1 0 6L46 62a4 4 0 0 1-6 0L27 49a4 4 0 0 1-1-3V35a4 4 0 0 1 3-4Z" fill="#FFFFFF"/>
+    <circle cx="33" cy="38" r="3" fill="#F2C36B"/>
+    <path d="m39 52 8-8" stroke="#7053A4" stroke-width="3" stroke-linecap="round"/>
+    <g transform="translate(96 32)" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, sans-serif">
+      <text x="0" y="18" fill="#746783" font-size="18">当前标签页</text>
+      <rect y="36" width="238" height="70" rx="14" fill="#EEE8F7" stroke="#7053A4" stroke-width="2"/>
+      <text x="20" y="79" fill="#30263F" font-size="24" font-weight="650">🚀 生产环境</text>
+      <rect y="126" width="238" height="48" rx="12" fill="#FFFFFF" stroke="#CABFD5"/>
+      <text x="20" y="157" fill="#746783" font-size="20">📊 数据看板</text>
+      <rect y="190" width="238" height="48" rx="12" fill="#FFFFFF" stroke="#CABFD5"/>
+      <text x="20" y="221" fill="#746783" font-size="20">🧪 测试环境</text>
+    </g>
+  </g>
+</svg>

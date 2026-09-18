@@ -1,0 +1,29 @@
+# Dependencies and test output
+node_modules/
+artifacts/
+dist/
+coverage/
+playwright-report/
+test-results/
+
+# Local verification notes
+VERIFICATION.md
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Logs and operating-system files
+*.log
+.DS_Store
+Thumbs.db
+
+# Editor files
+.idea/
+.vscode/
+*.swp
