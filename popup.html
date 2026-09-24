@@ -30,6 +30,18 @@
       </div>
     </form>
     <p id="status" class="status" role="status" aria-live="polite"></p>
+    <details id="monitor" class="monitor">
+      <summary>状态监听<span id="monitorBadge">未配置</span></summary>
+      <p id="monitorRule" class="monitor-rule" hidden></p>
+      <p id="monitorCurrent" class="monitor-current">选择网页中的状态文字，指定 A → B 后接收提醒。</p>
+      <div class="monitor-actions">
+        <button id="monitorPick" type="button">选择元素</button>
+        <button id="monitorPause" type="button" class="secondary" hidden>暂停</button>
+        <button id="monitorDelete" type="button" class="secondary" hidden>删除</button>
+      </div>
+      <div class="monitor-meta"><span id="monitorScope">跟随当前标签页，换页后自动寻找元素。</span><button id="monitorTest" type="button">测试通知</button></div>
+      <p id="monitorStatus" class="status" role="status" aria-live="polite"></p>
+    </details>
   </main>
 </body>
 </html>

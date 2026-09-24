@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const { verifyMonitor } = require('./verify-monitor.cjs');
 
 const extensionPath = path.resolve(__dirname, '..');
 const artifactPath = process.env.QA_OUTPUT || path.join(extensionPath, 'artifacts');
@@ -13,6 +14,12 @@ const errors = [];
 const server = http.createServer((request, response) => {
   const title = request.url.startsWith('/beta') ? '网页 B' : '网页 A';
   response.setHeader('Content-Type', 'text/html; charset=utf-8');
+  if (request.url.startsWith('/monitor-fixture')) {
+    const value = new URL(request.url, 'http://localhost').searchParams.get('initial') === 'B' ? '发布完成' : '发布中';
+    response.end(`<!doctype html><meta charset="utf-8"><title>发布状态演示</title><style>body{font:16px sans-serif;padding:70px 30px} #release{padding:14px;width:240px;border:1px solid #ccc}</style>
+      <h1>演示发布任务</h1><div id="release"><span id="release-status">${value}</span></div><p id="other">其他内容</p>`);
+    return;
+  }
   if (request.url.startsWith('/csp')) response.setHeader('Content-Security-Policy', "default-src 'none'; script-src 'none'");
   const body = `<!doctype html><html><head><meta charset="utf-8"><title>${title}</title></head><body><h1>${title}</h1><p>标签定名 · 浏览器验收页面</p><a href="/beta">下一个页面</a></body></html>`;
   if (request.url === '/slow') {
@@ -381,7 +388,9 @@ async function check(name, operation) {
       }, ids), false);
     });
 
-    await check('浏览器重启不遗留旧标签页名称', async () => {
+    await verifyMonitor({ context, popup, base, extensionId, artifactPath, check, eventually });
+
+    await check('浏览器重启不遗留旧标签页名称与监听规则', async () => {
       const remaining = await context.newPage();
       await remaining.goto(`${base}/alpha?restart`);
       const id = await getTabId(remaining);

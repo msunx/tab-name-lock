@@ -44,3 +44,18 @@ button.emoji-apply { min-height: 34px; padding: 6px 10px; font-size: 11px; }
   :root { --paper: #201B29; --surface: #2A2435; --ink: #F2EDF8; --muted: #B7ABC8; --line: #7E708D; --accent: #C5A5F0; --tint: #392D4D; --error: #FF9FB0; }
   button[type=submit], button.emoji-apply { color: #2E1747; }
 }
+.monitor { margin-top: 12px; padding-top: 9px; border-top: 1px solid color-mix(in srgb, var(--line) 40%, transparent); }
+.monitor summary { display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 12px; font-weight: 550; list-style: none; }
+.monitor summary::-webkit-details-marker { display: none; }
+.monitor summary::before { content: "›"; margin-right: 6px; color: var(--accent); font-size: 16px; line-height: 18px; }
+.monitor[open] summary::before { transform: rotate(90deg); }
+.monitor summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+#monitorBadge { flex: 1; text-align: right; color: var(--muted); font-size: 11px; font-weight: 400; }
+.monitor-rule { margin: 12px 0 6px; color: var(--accent); font-weight: 550; overflow-wrap: anywhere; }
+.monitor-current { margin: 9px 0 12px; font-size: 11px; color: var(--muted); max-height: 62px; overflow-y: auto; overflow-wrap: anywhere; }
+.monitor-actions { display: flex; gap: 7px; }
+.monitor-actions button { min-height: 34px; padding: 6px 11px; }
+#monitorPick { flex: 1; }
+.monitor-meta { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 8px; color: var(--muted); font-size: 10px; }
+#monitorTest { min-height: 28px; padding: 4px 0; border: 0; color: var(--accent); background: transparent; font-size: 11px; }
+@media (prefers-color-scheme: dark) { #monitorPick { color: #2E1747; } }

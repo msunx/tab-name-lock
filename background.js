@@ -1,4 +1,5 @@
 import { createNameRecord, nameParts } from "./naming.js";
+import { handleMonitorMessage } from "./monitor-background.js";
 
 const PREFIX = "tab-name:";
 const queues = new Map();
@@ -86,6 +87,7 @@ function fromPopup(sender) {
 }
 
 async function handleMessage(message, sender) {
+  if (message?.type?.startsWith("MONITOR_")) return handleMonitorMessage(message, sender);
   if (message?.type === "READ_OWN_NAME") {
     if (!sender.tab || sender.frameId !== 0) throw new Error("无法识别当前标签页。");
     return { record: await readName(sender.tab.id) };

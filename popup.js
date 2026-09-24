@@ -21,6 +21,12 @@ let currentName = "";
 let selectedEmoji = "";
 let supported = false;
 let busy = false;
+const monitorIds = ["monitor", "monitorBadge", "monitorRule", "monitorCurrent", "monitorPick", "monitorPause", "monitorDelete", "monitorTest", "monitorStatus"];
+const monitorElements = Object.fromEntries(monitorIds.map(id => [id, document.getElementById(id)]));
+let monitorRecord = null;
+let monitorSupported = false;
+let monitorBusy = false;
+let monitorRead = 0;
 
 function status(text, error = false) {
   elements.status.textContent = text;
@@ -109,6 +115,7 @@ async function initialise() {
     selectedEmoji = result.emoji;
     supported = result.supported;
     elements.name.value = result.name;
+    await inspectMonitor(true);
     if (!supported) status(currentName ? "名称仍保留；回到普通网页后自动生效。" : "Chrome 不允许扩展修改此页面的标题。", !currentName);
     render();
     if (!elements.name.disabled) {
@@ -121,6 +128,68 @@ async function initialise() {
     render();
   }
 }
+
+function renderMonitor() {
+  const labels = { watching: "监听中", waiting: "等待元素", ambiguous: "需重新选择", paused: "已暂停" };
+  monitorElements.monitorBadge.textContent = monitorRecord ? labels[monitorRecord.status] || "等待元素" : "未配置";
+  monitorElements.monitorRule.hidden = !monitorRecord;
+  monitorElements.monitorRule.textContent = monitorRecord ? `${monitorRecord.stateA} → ${monitorRecord.stateB}` : "";
+  const descriptions = { paused: "已暂停，继续时从当前状态重新开始。", waiting: "等待当前页面的目标元素，找到后继续监听。", ambiguous: "目标元素无法唯一定位，请重新选择。" };
+  monitorElements.monitorCurrent.textContent = monitorRecord ? !monitorSupported ? "当前页面不支持监听，回到普通网页后自动寻找元素。"
+    : descriptions[monitorRecord.status] || `当前：${monitorRecord.lastText || "（空文字）"}`
+    : monitorSupported ? "选择网页中的状态文字，指定 A → B 后接收提醒。" : "当前页面不支持选择元素，请打开普通网页。";
+  monitorElements.monitorPick.textContent = monitorRecord ? "编辑规则" : "选择元素";
+  monitorElements.monitorPick.disabled = monitorBusy || !monitorSupported;
+  monitorElements.monitorPause.hidden = monitorElements.monitorDelete.hidden = !monitorRecord;
+  monitorElements.monitorPause.textContent = monitorRecord?.paused ? "继续" : "暂停";
+  monitorElements.monitorPause.disabled = monitorElements.monitorDelete.disabled = monitorBusy || !monitorRecord;
+  monitorElements.monitorTest.disabled = monitorBusy || tabId === null;
+}
+
+async function inspectMonitor(first = false) {
+  const number = ++monitorRead;
+  const result = await request("MONITOR_INSPECT");
+  if (number !== monitorRead) return;
+  monitorRecord = result.record;
+  monitorSupported = result.supported;
+  if (first && monitorRecord) monitorElements.monitor.open = true;
+  if (monitorRecord?.notificationError) {
+    monitorElements.monitorStatus.textContent = monitorRecord.notificationError;
+    monitorElements.monitorStatus.classList.add("error");
+  }
+  renderMonitor();
+}
+
+async function monitorAction(operation) {
+  if (monitorBusy || tabId === null) return;
+  monitorBusy = true;
+  monitorElements.monitorStatus.textContent = "";
+  monitorElements.monitorStatus.classList.remove("error");
+  renderMonitor();
+  try { await operation(); }
+  catch (error) { monitorElements.monitorStatus.textContent = error.message; monitorElements.monitorStatus.classList.add("error"); }
+  finally { monitorBusy = false; renderMonitor(); }
+}
+
+monitorElements.monitorPick.addEventListener("click", () => monitorAction(async () => {
+  await request("MONITOR_START_PICK", { edit: Boolean(monitorRecord) });
+  window.close();
+}));
+monitorElements.monitorPause.addEventListener("click", () => monitorAction(async () => {
+  await request("MONITOR_PAUSE", { paused: !monitorRecord.paused });
+  await inspectMonitor();
+}));
+monitorElements.monitorDelete.addEventListener("click", () => monitorAction(async () => {
+  await request("MONITOR_DELETE");
+  await inspectMonitor();
+}));
+monitorElements.monitorTest.addEventListener("click", () => monitorAction(async () => {
+  await request("MONITOR_TEST");
+  monitorElements.monitorStatus.textContent = "测试通知已发送。若未显示，请检查系统的 Chrome 通知与专注模式设置。";
+}));
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "session" && changes[`tab-monitor:${tabId}`]) inspectMonitor().catch(() => {});
+});
 
 elements.emojiToggle.addEventListener("click", () => togglePicker(elements.emojiPicker.hidden));
 elements.emojiClear.addEventListener("click", () => chooseEmoji(""));
