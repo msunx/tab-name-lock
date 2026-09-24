@@ -67,11 +67,11 @@ exports.verifyMonitor = async ({ context, popup, base, extensionId, artifactPath
   let service = await mockNotifications();
 
   await check('监听：按标签页跟随新发布单、跨应用/域名与离开返回', async () => {
-    const origin = 'https://ops.qima-inc.com/';
+    const origin = 'https://deploy.example.test/';
     const release = (id, app = 'demo', bu = '1') => `${origin}#/applications/${app}/deploy/${id}/publish?buId=${bu}`;
-    // Serve a local fixture at the OPS origin; this browser has no user credentials and never calls the real site.
+    // Intercept a reserved test hostname; the fixture never calls a real deployment service.
     await page.route(`${origin}**`, route => route.fulfill({ contentType: 'text/html; charset=utf-8',
-      body: '<meta charset="utf-8"><title>Local OPS fixture</title><div style="padding:70px 30px" id="release"><span id="release-status">发布中</span></div>' }));
+      body: '<meta charset="utf-8"><title>Local deployment fixture</title><div style="padding:70px 30px" id="release"><span id="release-status">发布中</span></div>' }));
     await page.goto(release(101));
     await pick(); await save('发布中', '发布成功');
     const version = (await read()).version;
