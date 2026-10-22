@@ -4,7 +4,7 @@
 html { width: 344px; max-height: 580px; overflow-y: auto; scrollbar-color: var(--muted) var(--paper); scrollbar-width: thin; }
 body { margin: 0; background: var(--paper); color: var(--ink); font: 13px/1.5 -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; }
 main { padding: 18px; }
-header { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
+header { display: flex; align-items: center; gap: 8px; height: 24px; margin-bottom: 18px; }
 h1 { margin: 0; font-size: 15px; font-weight: 600; }
 label { display: block; margin-bottom: 7px; font-size: 12px; font-weight: 550; }
 input { width: 100%; min-width: 0; height: 42px; padding: 10px 11px; color: var(--ink); background: var(--surface); border: 1px solid var(--line);
@@ -59,3 +59,15 @@ button.emoji-apply { min-height: 34px; padding: 6px 10px; font-size: 11px; }
 .monitor-meta { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 8px; color: var(--muted); font-size: 10px; }
 #monitorTest { min-height: 28px; padding: 4px 0; border: 0; color: var(--accent); background: transparent; font-size: 11px; }
 @media (prefers-color-scheme: dark) { #monitorPick { color: #2E1747; } }
+.header-button { margin-left: auto; min-height: 28px; padding: 3px 5px; border: 0; color: var(--accent); background: transparent; }
+#settingsHeading { margin: 0 0 8px; font-size: 15px; }
+.settings-intro { margin: 0 0 18px; color: var(--muted); font-size: 12px; }
+.settings-hint { margin: 8px 0 14px; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.bark-url-row { display: flex; gap: 6px; }
+.bark-url-row input { flex: 1; font-size: 12px; }
+#barkReveal { flex-shrink: 0; padding: 7px; min-height: 34px; }
+.settings-switch { display: flex; align-items: center; gap: 8px; margin: 16px 0; cursor: pointer; }
+.settings-switch input { width: 16px; height: 16px; margin: 0; padding: 0; accent-color: var(--accent); }
+.settings-actions { display: flex; gap: 6px; }
+.settings-actions button { padding: 8px 10px; }
+.settings-note { margin-top: 16px; padding-top: 12px; border-top: 1px solid color-mix(in srgb, var(--line) 40%, transparent); }

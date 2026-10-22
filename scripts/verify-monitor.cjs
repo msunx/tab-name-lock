@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
+const { verifyBark } = require('./verify-bark.cjs');
 
 // Browser integration scenarios. CDP reaches the closed extension-owned shadow root only in the test driver.
 exports.verifyMonitor = async ({ context, popup, base, extensionId, artifactPath, check, eventually, nativeVisibility = false }) => {
@@ -65,6 +66,8 @@ exports.verifyMonitor = async ({ context, popup, base, extensionId, artifactPath
     return service;
   };
   let service = await mockNotifications();
+
+  await verifyBark({ popup, page, tabId, artifactPath, check, eventually, request, read, count, set, pick, save, service });
 
   await check('监听：按标签页跟随新发布单、跨应用/域名与离开返回', async () => {
     const origin = 'https://deploy.example.test/';

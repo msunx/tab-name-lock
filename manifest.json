@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "标签定名",
-  "version": "1.4.2",
-  "description": "独立命名标签页，监听页面元素从指定状态 A 变为 B，并发送系统通知。规则与名称关闭即清除。",
+  "version": "1.5.1",
+  "description": "独立命名标签页，监听页面元素从状态 A 变为 B，发送系统通知并可同步推送到 Bark。规则与名称关闭即清除。",
   "minimum_chrome_version": "120",
   "permissions": [
     "storage",

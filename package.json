@@ -1,11 +1,12 @@
 {
   "name": "tab-name-lock",
-  "version": "1.4.2",
+  "version": "1.5.1",
   "private": true,
   "description": "A Chrome extension that keeps a custom title for the lifetime of one tab.",
   "scripts": {
     "verify:browser": "node scripts/verify-browser.cjs",
-    "verify:popup": "node scripts/verify-native-popup.cjs"
+    "verify:popup": "node scripts/verify-native-popup.cjs",
+    "verify:update": "node scripts/verify-extension-update.cjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"

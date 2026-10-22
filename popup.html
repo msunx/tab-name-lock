@@ -9,7 +9,8 @@
 </head>
 <body>
   <main>
-    <header><img src="icons/32.png" width="24" height="24" alt=""><h1>标签定名</h1></header>
+    <header><img src="icons/32.png" width="24" height="24" alt=""><h1>标签定名</h1><button id="settingsToggle" type="button" class="header-button" aria-expanded="false" aria-controls="settingsView">设置</button></header>
+    <div id="homeView">
     <form id="form">
       <label for="name">标签名称</label>
       <div class="name-input">
@@ -42,6 +43,32 @@
       <div class="monitor-meta"><span id="monitorScope">跟随当前标签页，换页后自动寻找元素。</span><button id="monitorTest" type="button">测试通知</button></div>
       <p id="monitorStatus" class="status" role="status" aria-live="polite"></p>
     </details>
+    </div>
+    <section id="settingsView" hidden aria-labelledby="settingsHeading">
+      <h2 id="settingsHeading">通知设置</h2>
+      <p class="settings-intro">同步推送到 Bark，手机和 Apple Watch 也能收到状态提醒。</p>
+      <form id="barkForm">
+        <label for="barkUrl">Bark 推送 JSON 链接</label>
+        <div class="bark-url-row">
+          <input id="barkUrl" type="password" maxlength="2048" placeholder="https://api.day.app/你的Key" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="barkHint" disabled>
+          <button id="barkReveal" type="button" class="secondary" aria-label="显示推送链接" aria-pressed="false" disabled>显示</button>
+        </div>
+        <p id="barkHint" class="settings-hint">复制 JSON 示例中以 Key 结尾的 HTTPS 地址，无需粘贴整段命令。</p>
+        <label class="settings-switch"><input id="barkEnabled" type="checkbox" checked disabled><span>同步推送到 Bark</span></label>
+        <div class="settings-actions">
+          <button id="barkSave" type="submit" disabled>保存配置</button>
+          <button id="barkTest" type="button" class="secondary" disabled>测试推送</button>
+          <button id="barkClear" type="button" class="secondary" disabled>清除</button>
+        </div>
+      </form>
+      <p id="barkStatus" class="status" role="status" aria-live="polite"></p>
+      <div id="barkUpdateHelp" hidden>
+        <p class="settings-hint">重新加载会清除本次会话的名称和监听规则；已保存的 Bark 配置会保留。</p>
+        <button id="barkOpenExtensions" type="button" class="secondary">打开扩展管理</button>
+      </div>
+      <p class="settings-hint settings-note">配置对所有监听标签页生效，保存在本机。仅发送自定义标签名和 A → B 状态，不附带网页地址。测试后需保存才会生效。</p>
+      <p class="settings-hint">Apple Watch 需开启 Bark 通知镜像；iPhone 锁屏且手表已解锁时，通常会在手表上提醒。</p>
+    </section>
   </main>
 </body>
 </html>

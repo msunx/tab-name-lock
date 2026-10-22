@@ -1,5 +1,6 @@
 import { createNameRecord, nameParts } from "./naming.js";
 import { handleMonitorMessage } from "./monitor-background.js";
+import { handleBarkMessage } from "./bark-background.js";
 
 const PREFIX = "tab-name:";
 const queues = new Map();
@@ -87,6 +88,7 @@ function fromPopup(sender) {
 }
 
 async function handleMessage(message, sender) {
+  if (message?.type?.startsWith("BARK_")) return handleBarkMessage(message, sender);
   if (message?.type?.startsWith("MONITOR_")) return handleMonitorMessage(message, sender);
   if (message?.type === "READ_OWN_NAME") {
     if (!sender.tab || sender.frameId !== 0) throw new Error("无法识别当前标签页。");

@@ -1,4 +1,5 @@
 import { isSingleEmoji } from "./naming.js";
+import "./bark-settings.js";
 
 const ids = ["form", "name", "save", "reset", "status", "hint", "emojiToggle", "emojiPicker", "emojiGrid", "emojiCustom", "emojiApply", "emojiClear"];
 const elements = Object.fromEntries(ids.map((id) => [id, document.getElementById(id)]));
@@ -118,7 +119,7 @@ async function initialise() {
     await inspectMonitor(true);
     if (!supported) status(currentName ? "名称仍保留；回到普通网页后自动生效。" : "Chrome 不允许扩展修改此页面的标题。", !currentName);
     render();
-    if (!elements.name.disabled) {
+    if (!elements.name.disabled && !document.getElementById("homeView").hidden) {
       elements.name.focus();
       elements.name.select();
     }
@@ -150,12 +151,16 @@ async function inspectMonitor(first = false) {
   const number = ++monitorRead;
   const result = await request("MONITOR_INSPECT");
   if (number !== monitorRead) return;
+  const previousError = monitorRecord?.notificationError;
   monitorRecord = result.record;
   monitorSupported = result.supported;
   if (first && monitorRecord) monitorElements.monitor.open = true;
   if (monitorRecord?.notificationError) {
     monitorElements.monitorStatus.textContent = monitorRecord.notificationError;
     monitorElements.monitorStatus.classList.add("error");
+  } else if (previousError && monitorElements.monitorStatus.textContent.includes(previousError)) {
+    monitorElements.monitorStatus.textContent = "";
+    monitorElements.monitorStatus.classList.remove("error");
   }
   renderMonitor();
 }
@@ -185,7 +190,9 @@ monitorElements.monitorDelete.addEventListener("click", () => monitorAction(asyn
 }));
 monitorElements.monitorTest.addEventListener("click", () => monitorAction(async () => {
   await request("MONITOR_TEST");
-  monitorElements.monitorStatus.textContent = "测试通知已发送。若未显示，请检查系统的 Chrome 通知与专注模式设置。";
+  await inspectMonitor();
+  const message = "桌面测试通知已发送。若未显示，请检查系统的 Chrome 通知与专注模式设置。";
+  monitorElements.monitorStatus.textContent = monitorRecord?.notificationError ? `${message} ${monitorRecord.notificationError}` : message;
 }));
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "session" && changes[`tab-monitor:${tabId}`]) inspectMonitor().catch(() => {});

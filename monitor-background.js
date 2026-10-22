@@ -1,3 +1,5 @@
+import { sendBarkNotification } from "./bark-background.js";
+
 const PREFIX = "tab-monitor:";
 const PICK = "monitor-pick:";
 const NOTICE = "monitor-notice:";
@@ -75,6 +77,16 @@ async function createNotice(tabId, record, test = false) {
   }
 }
 
+async function deliverNotifications(tabId, record) {
+  const bark = async () => {
+    const name = await read(`tab-name:${tabId}`);
+    // Only explicit user labels and configured states leave the browser, never the site's title or URL.
+    return sendBarkNotification((name?.title || "标签定名").slice(0, 120), `${record.stateA} → ${record.stateB}`);
+  };
+  const results = await Promise.allSettled([createNotice(tabId, record), bark()]);
+  return results.map((result, index) => result.status === "rejected" ? `${index ? "Bark 推送" : "桌面通知"}失败：${result.reason.message}` : "").filter(Boolean).join("；");
+}
+
 async function validateContent(sender) {
   if (sender.id !== chrome.runtime.id || !sender.tab || sender.frameId !== 0 || !sender.documentId) throw new Error("无法识别当前页面。");
   const frame = await currentFrame(sender.tab.id);
@@ -142,8 +154,7 @@ async function handleContent(message, sender) {
       record.lastTriggeredAt = Date.now();
       record.notificationError = "";
       await write(tabId, record);
-      try { await createNotice(tabId, record); }
-      catch (error) { record.notificationError = `通知发送失败：${error.message}`; }
+      record.notificationError = await deliverNotifications(tabId, record);
     }
     await write(tabId, record);
     return {};
@@ -183,7 +194,10 @@ export async function handleMonitorMessage(message, sender) {
     }
     if (message.type === "MONITOR_TEST") {
       await createNotice(tabId, record, true);
-      if (record?.notificationError) { record.notificationError = ""; await write(tabId, record); }
+      if (record?.notificationError) {
+        record.notificationError = record.notificationError.split("；").filter(error => error.startsWith("Bark 推送失败：")).join("；");
+        await write(tabId, record);
+      }
       return {};
     }
     if (message.type === "MONITOR_START_PICK") {

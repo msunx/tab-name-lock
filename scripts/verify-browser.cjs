@@ -390,15 +390,18 @@ async function check(name, operation) {
 
     await verifyMonitor({ context, popup, base, extensionId, artifactPath, check, eventually });
 
-    await check('浏览器重启不遗留旧标签页名称与监听规则', async () => {
+    await check('浏览器重启清除标签规则，但保留本机 Bark 配置', async () => {
       const remaining = await context.newPage();
       await remaining.goto(`${base}/alpha?restart`);
       const id = await getTabId(remaining);
       await name(id, '不应留到下次');
+      const barkConfig = { url: 'https://push.example.test/restart-key', enabled: false };
+      assert.equal((await popup.evaluate(config => chrome.runtime.sendMessage({ type: 'BARK_SAVE', ...config }), barkConfig)).ok, true);
       await context.close();
       context = await launch();
       const nextWorker = context.serviceWorkers()[0] || await context.waitForEvent('serviceworker');
       assert.deepEqual(await nextWorker.evaluate(() => chrome.storage.session.get(null)), {});
+      assert.deepEqual(await nextWorker.evaluate(async () => (await chrome.storage.local.get('bark-notification-config'))['bark-notification-config']), barkConfig);
       const page = await context.newPage();
       await page.goto(`${base}/alpha?restart`);
       assert.equal(await title(page), '网页 A');
